@@ -17,6 +17,7 @@ def get_col_data(fname, sheet_index, col_index):
     return table.col_values(col_index)
 
 
+# gap: x轴刻度间距
 def draw_line_chart(x, y, title, gap, fname):
     plt.title(title)
     # 返回当前的Axes对象
@@ -37,11 +38,13 @@ def draw_line_chart(x, y, title, gap, fname):
     plt.close('all')
 
 
+# 计算标准差
 def calc_stdev(arr, average):
     tmp = sum((i - average) ** 2 for i in arr) / len(arr)
     return tmp ** 0.5
 
 
+# 获取计算机cpu使用率
 def get_cpu_trend(total_time, interval):
     begin = time.time()
     x, y = [], []
@@ -55,10 +58,10 @@ def get_cpu_trend(total_time, interval):
         total_time -= interval
 
     draw_line_chart(x, y, 'CPU', 1, 'test.png')
-    write_xlsx(x, y, 'test.xlsx', 'test.png')
+    write_xlsx(y, 'test.xlsx', 'test.png')
 
 
-def write_xlsx(x, y, xlsx_name, img_name):
+def write_xlsx(y, xlsx_name, img_name):
     average = sum(y) / len(y)
     stdev = calc_stdev(y, average)
     ratio = len([i for i in y if i < 45]) / len(y)
@@ -78,6 +81,6 @@ def write_xlsx(x, y, xlsx_name, img_name):
 x = get_col_data('cpu.xls', 0, 0)[1:]
 y = get_col_data('cpu.xls', 0, 1)[1:]
 draw_line_chart(x, y, 'CPU', 25, 'trend.png')
-write_xlsx(x, y, 'result.xlsx', 'trend.png')
+write_xlsx(y, 'result.xlsx', 'trend.png')
 
 get_cpu_trend(20, 0.2)
